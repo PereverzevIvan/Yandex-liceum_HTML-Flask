@@ -48,11 +48,11 @@ while ran:
         if event.type == pygame.QUIT:
             ran = False
         if event.type == pygame.KEYDOWN:
-            if event.key == 1073741921:
+            if event.key == pygame.K_PAGEUP:
                 if float(delta) + 0.1 < 1:
                     delta = str(round(float(delta) + 0.1, 1))
                 map_file = load_image_from_site(lon, lat, delta)
-            if event.key == 1073741915:
+            if event.key == pygame.K_PAGEDOWN:
                 if float(delta) - 0.1 > 0:
                     delta = str(round(float(delta) - 0.1, 1))
                 map_file = load_image_from_site(lon, lat, delta)
