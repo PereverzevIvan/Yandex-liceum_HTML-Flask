@@ -56,6 +56,18 @@ while ran:
                 if float(delta) - 0.1 > 0:
                     delta = str(round(float(delta) - 0.1, 1))
                 map_file = load_image_from_site(lon, lat, delta)
+            if event.key == pygame.K_DOWN:
+                lat = str(round(float(lat) - 0.01, 6))
+                map_file = load_image_from_site(lon, lat, delta)
+            if event.key == pygame.K_UP:
+                lat = str(round(float(lat) + 0.01, 6))
+                map_file = load_image_from_site(lon, lat, delta)
+            if event.key == pygame.K_RIGHT:
+                lon = str(round(float(lon) + 0.01, 6))
+                map_file = load_image_from_site(lon, lat, delta)
+            if event.key == pygame.K_LEFT:
+                lon = str(round(float(lon) - 0.01, 6))
+                map_file = load_image_from_site(lon, lat, delta)
     screen.blit(map_file, (0, 0))
     pygame.display.flip()
 pygame.quit()
