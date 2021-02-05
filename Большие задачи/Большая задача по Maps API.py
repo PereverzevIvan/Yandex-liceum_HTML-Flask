@@ -8,7 +8,8 @@ pygame.init()  # Инициализируем PyGame
 
 API_SERVER = "http://static-maps.yandex.ru/1.x/"  # Апи сервера
 # Список ключей кнопок, при нажатии на которые проводятся соответственные действия
-COMMAND_LIST = [pygame.K_DOWN, pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_9, pygame.K_0]
+COMMAND_LIST = [pygame.K_DOWN, pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT,
+                pygame.K_PAGEUP, pygame.K_PAGEDOWN]
 
 
 # Класс изображения с картой
