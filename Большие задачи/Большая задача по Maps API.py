@@ -114,12 +114,17 @@ class ImageMap:
             except IndexError:
                 pass
 
+    # Метод, удаляющий все точки, которые должны быть отмечены на карте
+    def delete_points(self):
+        self.points = []
+        self.image = self.load_map()
+
 
 # Класс кнопки для смены вида карты
 class ChangeModeButton:
-    def __init__(self):
+    def __init__(self, x, y):
         self.image = pygame.Surface((50, 50))  # изображение
-        self.rect = self.image.get_rect(x=10, y=10)  # прямоугольник
+        self.rect = self.image.get_rect(x=x, y=y)  # прямоугольник
         self.font = pygame.font.Font(None, 20)  # шрифт
 
     # Метод обновления изображения
@@ -161,7 +166,7 @@ class FindButton:
         # иконка кнопки поиска
         self.image = pygame.image.load("find_btn.png")
 
-    def update(self, event, map):
+    def update(self, map, event):
         global IN_FIND_PROCESS
         # Если нажата кнопка мыши
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -210,9 +215,29 @@ class FindButton:
         screen.blit(self.image, self.rect_im)
 
 
+# Кнопка сброса результатов поиска
+class SearchResetButton:
+    def __init__(self, x, y):
+        # Иконка кнопки
+        self.image = pygame.image.load("search reset btn.png")
+        # Прямоуг.
+        self.rect = self.image.get_rect(x=x, y=y)
+
+    # Метод обновления
+    def update(self, map, event):
+        # Если нажата кнопка мыши
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # Если в этот момент курсор находится в прямоуг. поля для ввода
+            if pygame.Rect.collidepoint(self.rect, *event.pos):
+                map.delete_points()
+
+    # Метод отрисовки
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+
 map = ImageMap(39.035931, 53.215521, 17)
-change_mode_btn = ChangeModeButton()
-find_btn = FindButton(70, 20, 100, 30)
+buttons = [ChangeModeButton(10, 10), FindButton(70, 20, 100, 30), SearchResetButton(10, 70)]
 window = pygame.display.set_mode((map.rect.width, map.rect.height))
 pygame.display.set_caption('Большая задача по Maps API')
 run = True
@@ -220,11 +245,9 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        change_mode_btn.update(map, event)
-        find_btn.update(event, map)
         map.update(event)
+        [button.update(map, event) for button in buttons]
     window.blit(map.image, (0, 0))
-    change_mode_btn.draw(window)
-    find_btn.draw(window)
+    [button.draw(window) for button in buttons]
     pygame.display.flip()
 pygame.quit()
