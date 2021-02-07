@@ -24,6 +24,10 @@ class ImageMap:
         self.points = []  # точки на карте, которые должны быть отмечены
         self.image = self.load_map()  # изображение
         self.rect = self.image.get_rect()  # прямоугольник, ограничивающий изображение
+        self.current_address = ''  # Текущий адрес
+        self.steps = {0: 0, 1: 0.1, 2: 0.1, 3: 0.1, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.1,
+                      8: 0.01, 9: 0.01, 10: 0.01, 11: 0.01, 12: 0.001, 13: 0.001, 14: 0.001,
+                      15: 0.0001, 16: 0.0001, 17: 0.0001}
 
     # Метод загрузки карты
     def load_map(self):
@@ -51,10 +55,10 @@ class ImageMap:
                 # Узнаём индекс события
                 action = COMMAND_LIST.index(event.key)
                 # Если нажата клавиша Page UP, придаём приросту масштаба отрицательное значение
-                if action == 4:
+                if action == 5:
                     zoom = -1
                 # Если нажата клавиша Page Down, придаём приросту масштаба положительное значение
-                elif action == 5:
+                elif action == 4:
                     zoom = 1
                 # Если нажата клавиша Влево, придаём приросту широты отрицательное значение
                 if action == 2:
@@ -69,13 +73,11 @@ class ImageMap:
                 elif action == 1:
                     lat = self.zoom // 1
                 # Прибавляем к текущему уровню масштаба значение прироста
-                self.zoom += zoom
-                # После чего проверяем, не выходит ли он за рамки
-                self.zoom = 17 if self.zoom > 17 else self.zoom
-                self.zoom = 0 if self.zoom < 0 else self.zoom
+                self.change_zoom(zoom)
                 # Проверив значение масщтаба, изменяем значения долготы и широты
-                self.lon += 0.001 * (lon / 10)
-                self.lat += 0.001 * (lat / 10)
+                print(self.zoom)
+                self.lon += self.steps[self.zoom] * lon
+                self.lat += self.steps[self.zoom] * lat
                 self.image = self.load_map()
 
     # Метод изменения вида карты
@@ -107,9 +109,11 @@ class ImageMap:
                 toponym = json_response["response"]["GeoObjectCollection"][
                     "featureMember"][0]["GeoObject"]
                 # Получаем координаты центра топонима
+                top_address = toponym["metaDataProperty"]["GeocoderMetaData"]["text"]
                 top_pos = toponym["Point"]["pos"]
                 self.lon, self.lat = [float(i) for i in top_pos.split()]
                 self.points.append([self.lon, self.lat, 'pm2rdm'])
+                self.current_address = top_address
                 self.image = self.load_map()
             except IndexError:
                 pass
@@ -117,6 +121,12 @@ class ImageMap:
     # Метод, удаляющий все точки, которые должны быть отмечены на карте
     def delete_points(self):
         self.points = []
+        self.image = self.load_map()
+
+    def change_zoom(self, value):
+        self.zoom += value
+        self.zoom = 17 if self.zoom > 17 else self.zoom
+        self.zoom = 0 if self.zoom < 0 else self.zoom
         self.image = self.load_map()
 
 
@@ -153,12 +163,12 @@ class ChangeModeButton:
 
 
 # Класс поля для ввода и кнопки поиска
-class FindButton:
+class InputField:
     def __init__(self, x, y, width, height, text=''):
         self.active = False  # активность поля для ввода
         self.text = text  # текст, находящийся в поле для ввода
         self.rect = pygame.Rect(x, y, width, height)  # прямоуг. поля для ввода
-        self.font = pygame.font.Font(None, 30)  # шрифт
+        self.font = pygame.font.Font(None, 20)  # шрифт
         # сгенерированный текст, который будет выводиться на экран
         self.shown_text = self.font.render(self.text, True, pygame.Color('black'))
         # прямоуг. кнопки поиска
@@ -192,7 +202,8 @@ class FindButton:
                     self.text = self.text[:-1]
                 # Иначе, добавляем символ, если это возможно
                 else:
-                    self.text += event.unicode
+                    if self.rect_im.right < 590:
+                        self.text += event.unicode
             # Генерируем текст, который будет выводиться на экран
             self.shown_text = self.font.render(self.text, True, pygame.Color('black'))
             # Увеличиваем ширину прямоуг. поля для ввода, если текст не умещается в старом
@@ -215,6 +226,40 @@ class FindButton:
         screen.blit(self.image, self.rect_im)
 
 
+class OutputField:
+    def __init__(self, x, y):
+        self.rect = pygame.Rect(x, y, 100, 80)
+        self.font = pygame.font.Font(None, 20)
+        self.shown_text = None
+        self.text_rect = None
+        self.text = []
+
+    def update(self, map, event):
+        if map.current_address:
+            self.text = self.edit_text(map.current_address)
+        else:
+            self.text = ['']
+        self.rect.width = max(100, len(self.text[0]) * 7 + 30)
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (255, 255, 255), self.rect)
+        pygame.draw.rect(screen, pygame.Color('lightskyblue3'), self.rect, width=5)
+        [screen.blit(self.font.render(self.text[i], True, (0, 0, 0)),
+                     (self.rect.x + 10, self.rect.y + 20 * (i + 1))) for i in range(len(self.text))]
+
+    def edit_text(self, text):
+        words = []
+        new_txt = ''
+        for i in text:
+            new_txt += i
+            if len(new_txt) * 7 > 430:
+                words.append(new_txt.strip())
+                new_txt = ''
+        new_txt += "."
+        words.append(new_txt.strip())
+        return words
+
+
 # Кнопка сброса результатов поиска
 class SearchResetButton:
     def __init__(self, x, y):
@@ -230,14 +275,36 @@ class SearchResetButton:
             # Если в этот момент курсор находится в прямоуг. поля для ввода
             if pygame.Rect.collidepoint(self.rect, *event.pos):
                 map.delete_points()
+                map.current_address = ''
 
     # Метод отрисовки
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
 
+class ZoomButtons:
+    def __init__(self, x, y):
+        self.rect_plus = pygame.Rect(x, y, 50, 50)
+        self.rect_minus = pygame.Rect(x, y + 55, 50, 50)
+        self.image_plus = pygame.image.load("plus btn.png")
+        self.image_minus = pygame.image.load("minus btn.png")
+
+    def update(self, map, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # Если в этот момент курсор находится в прямоуг. поля для ввода
+            if pygame.Rect.collidepoint(self.rect_plus, *event.pos):
+                map.change_zoom(1)
+            if pygame.Rect.collidepoint(self.rect_minus, *event.pos):
+                map.change_zoom(-1)
+
+    def draw(self, screen):
+        screen.blit(self.image_plus, self.rect_plus)
+        screen.blit(self.image_minus, self.rect_minus)
+
+
 map = ImageMap(39.035931, 53.215521, 17)
-buttons = [ChangeModeButton(10, 10), FindButton(70, 20, 100, 30), SearchResetButton(10, 70)]
+buttons = [ChangeModeButton(10, 10), InputField(70, 20, 100, 30), SearchResetButton(10, 70),
+           OutputField(10, 350), ZoomButtons(540, 200)]
 window = pygame.display.set_mode((map.rect.width, map.rect.height))
 pygame.display.set_caption('Большая задача по Maps API')
 run = True
