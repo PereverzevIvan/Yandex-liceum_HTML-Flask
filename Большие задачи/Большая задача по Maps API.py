@@ -75,7 +75,6 @@ class ImageMap:
                 # Прибавляем к текущему уровню масштаба значение прироста
                 self.change_zoom(zoom)
                 # Проверив значение масщтаба, изменяем значения долготы и широты
-                print(self.zoom)
                 self.lon += self.steps[self.zoom] * lon
                 self.lat += self.steps[self.zoom] * lat
                 self.image = self.load_map()
