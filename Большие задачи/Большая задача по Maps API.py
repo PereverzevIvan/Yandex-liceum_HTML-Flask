@@ -1,9 +1,6 @@
-import os
-import sys
 import pygame
 import requests
 from io import BytesIO
-from PyQt5.QtWidgets import QInputDialog, QWidget
 
 pygame.init()  # Инициализируем PyGame
 
@@ -12,6 +9,7 @@ API_SERVER = "http://static-maps.yandex.ru/1.x/"  # Апи сервера
 COMMAND_LIST = [pygame.K_DOWN, pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT,
                 pygame.K_PAGEUP, pygame.K_PAGEDOWN]
 IN_FIND_PROCESS = False  # Процесс поиска
+INDEX_ON = False
 
 
 # Класс изображения с картой
@@ -28,13 +26,14 @@ class ImageMap:
         self.steps = {0: 0, 1: 0.1, 2: 0.1, 3: 0.1, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.1,
                       8: 0.01, 9: 0.01, 10: 0.01, 11: 0.01, 12: 0.001, 13: 0.001, 14: 0.001,
                       15: 0.0001, 16: 0.0001, 17: 0.0001}
+        self.index_on = False
+        self.current_index = ''
 
     # Метод загрузки карты
     def load_map(self):
         # Параметры запроса
         params = {
             "ll": ",".join([str(self.lon), str(self.lat)]),
-            # "spn": ",".join([str(self.scale), str(self.scale)]),
             "l": self.mode,
             "z": self.zoom,
             "pt": f'{"~".join([",".join([str(j) for j in i]) for i in self.points])}',
@@ -109,11 +108,18 @@ class ImageMap:
                     "featureMember"][0]["GeoObject"]
                 # Получаем координаты центра топонима
                 top_address = toponym["metaDataProperty"]["GeocoderMetaData"]["text"]
+                if self.index_on:
+                    if "postal_code" in toponym["metaDataProperty"]["GeocoderMetaData"]['Address']:
+                        top_index = toponym["metaDataProperty"]["GeocoderMetaData"]['Address']["postal_code"]
+                        self.current_index = top_index
+                else:
+                    self.current_index = ''
                 top_pos = toponym["Point"]["pos"]
                 self.lon, self.lat = [float(i) for i in top_pos.split()]
                 self.points.append([self.lon, self.lat, 'pm2rdm'])
                 self.current_address = top_address
                 self.image = self.load_map()
+                print(self.current_index)
             except IndexError:
                 pass
 
@@ -236,6 +242,8 @@ class OutputField:
     def update(self, map, event):
         if map.current_address:
             self.text = self.edit_text(map.current_address)
+            if INDEX_ON and map.current_index:
+                self.text.append(map.current_index)
         else:
             self.text = ['']
         self.rect.width = max(100, len(self.text[0]) * 7 + 30)
@@ -260,7 +268,7 @@ class OutputField:
 
 
 # Кнопка сброса результатов поиска
-class SearchResetButton:
+class ResetButton:
     def __init__(self, x, y):
         # Иконка кнопки
         self.image = pygame.image.load("search reset btn.png")
@@ -269,12 +277,14 @@ class SearchResetButton:
 
     # Метод обновления
     def update(self, map, event):
+        global INDEX_ON
         # Если нажата кнопка мыши
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Если в этот момент курсор находится в прямоуг. поля для ввода
             if pygame.Rect.collidepoint(self.rect, *event.pos):
                 map.delete_points()
                 map.current_address = ''
+                INDEX_ON = False
 
     # Метод отрисовки
     def draw(self, screen):
@@ -301,9 +311,31 @@ class ZoomButtons:
         screen.blit(self.image_minus, self.rect_minus)
 
 
+class IndexButton:
+    def __init__(self, x, y):
+        self.image = pygame.image.load('index button.png')
+        self.rect = self.image.get_rect(x=x, y=y)
+        self.red = (255, 0, 0)
+        self.green = (0, 255, 0)
+
+    def update(self, map, event):
+        global INDEX_ON
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.Rect.collidepoint(self.rect, *event.pos):
+                INDEX_ON = not INDEX_ON
+        map.index_on = INDEX_ON
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+        if INDEX_ON:
+            pygame.draw.rect(screen, self.green, self.rect, width=3)
+        else:
+            pygame.draw.rect(screen, self.red, self.rect, width=3)
+
+
 map = ImageMap(39.035931, 53.215521, 17)
-buttons = [ChangeModeButton(10, 10), InputField(70, 20, 100, 30), SearchResetButton(10, 70),
-           OutputField(10, 350), ZoomButtons(540, 200)]
+buttons = [ChangeModeButton(10, 10), InputField(70, 20, 100, 30), ResetButton(10, 70),
+           OutputField(10, 350), ZoomButtons(540, 200), IndexButton(10, 130)]
 window = pygame.display.set_mode((map.rect.width, map.rect.height))
 pygame.display.set_caption('Большая задача по Maps API')
 run = True
