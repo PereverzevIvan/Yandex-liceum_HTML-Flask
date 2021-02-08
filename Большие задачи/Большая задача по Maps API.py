@@ -26,7 +26,6 @@ class ImageMap:
         self.steps = {0: 0, 1: 0.1, 2: 0.1, 3: 0.1, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.1,
                       8: 0.01, 9: 0.01, 10: 0.01, 11: 0.01, 12: 0.001, 13: 0.001, 14: 0.001,
                       15: 0.0001, 16: 0.0001, 17: 0.0001}
-        self.index_on = False
         self.current_index = ''
 
     # Метод загрузки карты
@@ -321,7 +320,6 @@ class IndexButton:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.Rect.collidepoint(self.rect, *event.pos):
                 INDEX_ON = not INDEX_ON
-        map.index_on = INDEX_ON
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
