@@ -108,10 +108,9 @@ class ImageMap:
                     "featureMember"][0]["GeoObject"]
                 # Получаем координаты центра топонима
                 top_address = toponym["metaDataProperty"]["GeocoderMetaData"]["text"]
-                if self.index_on:
-                    if "postal_code" in toponym["metaDataProperty"]["GeocoderMetaData"]['Address']:
-                        top_index = toponym["metaDataProperty"]["GeocoderMetaData"]['Address']["postal_code"]
-                        self.current_index = top_index
+                if "postal_code" in toponym["metaDataProperty"]["GeocoderMetaData"]['Address']:
+                    top_index = toponym["metaDataProperty"]["GeocoderMetaData"]['Address']["postal_code"]
+                    self.current_index = top_index
                 else:
                     self.current_index = ''
                 top_pos = toponym["Point"]["pos"]
@@ -119,7 +118,6 @@ class ImageMap:
                 self.points.append([self.lon, self.lat, 'pm2rdm'])
                 self.current_address = top_address
                 self.image = self.load_map()
-                print(self.current_index)
             except IndexError:
                 pass
 
