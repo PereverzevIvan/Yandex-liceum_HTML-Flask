@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Отбор астронавтов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="head-text">
+<h1>Регистрация в нашем сообществе</h1>
+</div>
+<div>
+    <form class="login_form">
+        <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" class="form-control" id="name" placeholder="Введите Ваше имя">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Введите Ваш email">
+        </div>
+        <div class="form-group">
+            <label for="education">Укажите Ваше образование</label>
+            <select class="form-control">
+                <option>Начальное</option>
+                <option>Среднее</option>
+                <option>Высшее</option>
+            </select>
+        </div>
+        <div class="checkbox">
+            <label for="checkbox">
+                <input type="checkbox">Врач</label><br>
+            <label for="checkbox">
+                <input type="checkbox">Эколог</label><br>
+            <label for="checkbox">
+                <input type="checkbox">Программист</label><br>
+            <label for="checkbox">
+                <input type="checkbox">Профессиональй геймер</label><br>
+            <label for="checkbox">
+                <input type="checkbox">Инженер</label><br>
+            <label for="checkbox">
+                <input type="checkbox">Метеоролог</label><br>
+        </div>
+        <div class="form-group">
+            <label for="about">Немного о себе</label>
+            <textarea class="form-control" id="about" rows="3" name="about"></textarea>
+        </div>
+        <div class="radio-inline">
+            <label>
+                <input type="radio" name="optionRadios" id="radio1" value="otion1" checked>Мужчина
+            </label>
+        </div>
+        <div class="radio-inline">
+            <label>
+                <input type="radio" name="optionRadios" id="radio2" value="otion2">Женщина
+            </label>
+        </div>
+        <div class="checkbox">
+            <label for="checkbox">
+                <input type="checkbox">Принимаю все условия</label>
+        </div>
+        <button type="button" class="btn btn-success">Регистрация</button>
+    </form>
+</div>
+</body>
+</html>
