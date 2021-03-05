@@ -4,9 +4,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SDJFSDKJFSKJ'
 
 
-@app.route('/')
-def index():
-    return render_template('base.html')
+@app.route('/<title>')
+def index(title):
+    return render_template('base.html', title=title)
 
 
 if __name__ == '__main__':
