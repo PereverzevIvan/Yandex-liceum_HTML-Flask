@@ -1,0 +1,16 @@
+body{
+	background-color: powderblue;
+}
+
+.container {
+    width: 650px;
+    background-color: snow;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
