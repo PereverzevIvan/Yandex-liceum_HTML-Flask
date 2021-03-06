@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="
+	width: 700px;
+	margin-left: auto;
+	margin-top: auto">
+    {% if list_t == "ol" %}
+        <h2>Список профессий</h2>
+        <ol>
+            {% for prof in profs %}
+                <li style="font-size: 30px">{{ prof }}</li>
+            {% endfor %}
+        </ol>
+    {% elif list_t == "ul" %}
+        <h2>Список профессий</h2>
+        <ul>
+            {% for prof in profs %}
+                <li style="font-size: 30px">{{ prof }}</li>
+            {% endfor %}</ul>
+    {% else %}
+        <h1 style="width=300px; margin-left: auto; margin-right">Error</h1>
+    {% endif %}
+</div>
+{% endblock %}
