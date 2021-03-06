@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="
+	width: 700px;
+	margin-left: auto;
+	margin-top: auto">
+    {% if 'строитель' in prof or 'инженер' in prof%}
+        <h3 style="width=300px; margin-left: auto; margin-right: auto">Инженерные тренажёры</h3>
+        <img src="{{ url_for('static', filename='img/cosmic_ship(инженер).jpg') }}" title="Инженерные тренажёры">
+    {% else %}
+        <h3 style="width=300px; margin-left: auto; margin-right">Научные симуляторы</h3>
+        <img src="{{ url_for('static', filename='img/cosmic_ship(наука).jpg') }}" title="Научные симуляторы">
+    {% endif %}
+</div>
+{% endblock %}
