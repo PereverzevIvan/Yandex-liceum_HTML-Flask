@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ params['title'] }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auto_answer.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <h1>Миссия Колонизация Марса</h1>
+        <div class="navbar-text">
+            Mars One
+        </div>
+    </div>
+</nav>
+<h4 class="apple_tree_h4">И на Марсе будут яблони цвести!</h4>
+{% if params['title'] == 'Ответ' %}
+    <h4 style="padding-left: 40px">К сожалению, сейчас доступна лишь функция авто-ответа</h4>
+{% elif params['title'] == 'Главная страница' %}
+    <div class="urls">
+        <a href="http://127.0.0.1:8080/answer"><h5>Ответ</h5></a>
+        <a href="http://127.0.0.1:8080/auto_answer"><h5>Авто-ответ</h5></a>
+    </div>
+{% endif %}
+{% block auto_answer %}{% endblock %}
+</body>
+</html>

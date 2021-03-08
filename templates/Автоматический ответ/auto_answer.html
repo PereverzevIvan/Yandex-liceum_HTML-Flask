@@ -1,0 +1,11 @@
+{% extends "Автоматический ответ/base.html" %}
+
+{% block auto_answer %}
+<div class="container">
+    {% for key, value in params.items() %}
+        {% if not loop.first %}
+            <h5><span style="color: blue;">{{ key }}</span>: <span style="color: crimson;">{{ value }}</span></h5>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
