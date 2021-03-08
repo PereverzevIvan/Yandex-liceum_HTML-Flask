@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Двойная защита</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/double_defends.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <h1>Миссия Колонизация Марса</h1>
+        <div class="navbar-text">
+            Mars One
+        </div>
+    </div>
+</nav>
+<h4 class="apple_tree_h4">И на Марсе будут яблони цвести!</h4>
+{% block double_defends %}{% endblock %}
+</body>
+</html>

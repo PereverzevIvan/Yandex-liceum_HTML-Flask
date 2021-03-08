@@ -1,0 +1,39 @@
+{% extends "Двойная защита/base.html" %}
+
+{% block double_defends %}
+<form class="container" action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="fields">
+        <h1><img src="{{ url_for('static', filename='img/emblem.png') }}"> Аварийный доступ</h1>
+        <p>
+            {{ form.astro_id.label }}<br>
+            {{ form.astro_id(class="form-control") }}
+            {% for error in form.astro_id.errors %}
+            <br><span class="alert alert-danger" role="alert">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.astro_password.label }}<br>
+            {{ form.astro_password(class="form-control") }}
+            {% for error in form.astro_password.errors %}
+            <br><span class="alert alert-danger" role="alert">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.captain_id.label }}<br>
+            {{ form.captain_id(class="form-control") }}
+            {% for error in form.captain_id.errors %}
+            <br><span class="alert alert-danger" role="alert">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.captain_password.label }}<br>
+            {{ form.captain_password(class="form-control") }}
+            {% for error in form.captain_password.errors %}
+            <br><span class="alert alert-danger" role="alert">{{ error }}</span>
+            {% endfor %}
+        </p><br>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </div>
+</form>
+{% endblock %}
