@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 style="width: 300px; margin-left: auto; margin-right: auto">Список работ</h2>
+    {% for job in jobs %}
+    <table class="table">
+        <h2 style="color: black">Action # {{job.id}}</h2>
+        <thead>
+        <tr class="table-dark">
+            <th scope="col">Title of activity</th>
+            <th scope="col">Team leader</th>
+            <th scope="col">Duration</th>
+            <th scope="col">List of collaborators</th>
+            <th scope="col">Is finished</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-secondary">
+            <th scope="row">{{job.job}}</th>
+            <td>{{ users[job.team_leader - 1] }}</td>
+            <td>{{job.work_size}}</td>
+            <td>{{job.collaborators}}</td>
+            {% if job.is_finished %}
+            <td class="table-success">{{job.is_finished}}</td>
+            {% else %}
+            <td class="table-danger">{{job.is_finished}}</td>
+            {% endif %}
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <button type="button" class="btn btn-primary"><a href="http://127.0.0.1:5000/add_job"
+                                                     style="color: white; text-decoration: none">Добавить работу</a></button>
+</div>
+{% endblock %}

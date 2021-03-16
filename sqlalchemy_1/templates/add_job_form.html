@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Добавление работы</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <span>
+            {{ form.job.label }}<br>
+            {{ form.job(class="form-control", type="job") }}<br>
+            {% for error in form.job.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </span>
+        <span>
+            {{ form.work_size.label }}<br>
+            {{ form.work_size(class="form-control", type="work_size") }}<br>
+            {% for error in form.work_size.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </span>
+        <span>
+            {{ form.collaborators.label }}<br>
+            {{ form.collaborators(class="form-control", type="collaborators") }}<br>
+            {% for error in form.collaborators.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </span>
+        <span>
+            {{ form.team_leader.label }}<br>
+            {{ form.team_leader(class="form-control", type="team_leader") }}<br>
+            {% for error in form.team_leader.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </span>
+        <span>{{ form.is_finished() }} {{ form.is_finished.label }}</span><br><br>
+        <span>{{ form.submit(type="submit", class="btn btn-primary") }}</span>
+        <div>{{ message }}</div>
+    </form>
+</div>
+{% endblock %}
